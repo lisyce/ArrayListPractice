@@ -1,9 +1,9 @@
 package com.donuts;
 
 public class Product {
-    private String name;
+    private final String name;
     private double price;
-    private String imageSrc;
+    private final String imageSrc;
 
     public Product(String name, double price, String imageSrc) {
         this.name = name;
