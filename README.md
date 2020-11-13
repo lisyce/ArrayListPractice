@@ -1,0 +1,3 @@
+# ArrayListPractice
+ArrayListDonuts is the actual project. ArrayListPractice is obselete. I honestly don't remember adding it and I can't seem to delete it.
+I really hope this code works when downloaded onto someone else's machine because if I struggled with gradle for nothing...
