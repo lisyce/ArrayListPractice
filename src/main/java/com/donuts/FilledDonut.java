@@ -10,9 +10,11 @@ public class FilledDonut extends Donut{
 
     }
 
+    @Override
     public void addFilling(Filling filling) {
         this.filling = filling;
         super.setPrice(super.getPrice() + filling.getPrice());
+        System.out.println("new price of donut after filling: " + super.getPrice());
     }
 
 

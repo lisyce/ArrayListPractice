@@ -1,5 +1,7 @@
 package com.donuts;
 
+import com.donuts.fillings.Filling;
+import com.donuts.toppings.Topping;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -16,34 +18,38 @@ import java.io.FileNotFoundException;
 
 public class ChooseTypeScene {
 
-    public ChooseTypeScene() {
+    private Donut donut;
+
+
+    public ChooseTypeScene(Donut donut) {
+        this.donut = donut;
     }
 
-    public Scene chooseTypeScene(Stage window, Double costVariable, Product[] productList, Scene[] correspondingScenes) {
+    public Scene chooseTypeScene(Stage window, Product[] productList, Scene[] correspondingScenes) {
         //choose type scene
         VBox chooseTypeVBox = new VBox();
         chooseTypeVBox.setSpacing(20);
         chooseTypeVBox.setAlignment(Pos.CENTER);
-        HBox typeHBox = GenericHBoxPickerFromArrayList(window, costVariable, productList, correspondingScenes);
+        HBox typeHBox = GenericHBoxPickerFromArrayList(window, productList, correspondingScenes);
         chooseTypeVBox.getChildren().add(typeHBox);
 
 
         return new Scene(chooseTypeVBox, 600, 300, Color.WHITE);
     }
 
-    private HBox GenericHBoxPickerFromArrayList(Stage window, Double costVariable, Product[] productList, Scene[] correspondingScenes) {
+    private HBox GenericHBoxPickerFromArrayList(Stage window, Product[] productList, Scene[] correspondingScenes) {
         HBox choicesHBox = new HBox();
         choicesHBox.setAlignment(Pos.CENTER);
 
         for (int i=0; i<=productList.length-1; i++) {
-            Object product = productList[i];
+            Product product = productList[i];
             choicesHBox.setSpacing(50);
 
             //add the image
             Image productImage = null;
             try {
-                productImage = new Image(new FileInputStream(((Product) product).getImageSrc()));
-                System.out.println(((Product) product).getImageSrc());
+                productImage = new Image(new FileInputStream(product.getImageSrc()));
+                System.out.println(product.getImageSrc());
 
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
@@ -56,7 +62,7 @@ public class ChooseTypeScene {
             choiceVBox.getChildren().add(imageView);
 
             //add the item label
-            Label itemLabel = new Label(((Product) product).getName());
+            Label itemLabel = new Label(product.getName());
             itemLabel.setStyle("-fx-font-size: 15");
             choiceVBox.getChildren().add(itemLabel);
 
@@ -68,14 +74,28 @@ public class ChooseTypeScene {
             try {
                 buttonScene = correspondingScenes[i];
             } catch (ArrayIndexOutOfBoundsException e) {
-                buttonScene = correspondingScenes[0];
+
             }
 
             Scene finalButtonScene = buttonScene;
             selectButton.setOnAction(e -> {
-                incrementCost(costVariable, ((Product) product).getPrice());
-                System.out.println("changing scenes");
-                System.out.println("Scene: " + finalButtonScene);
+                if (product instanceof Filling) {
+                    System.out.println("adding filling");
+                    (donut).addFilling((Filling) product);
+                }
+
+                try {
+                    donut.addTopping((Topping) product);
+                    System.out.println("adding topping");
+                } catch (Exception ClassCastException) {
+                    if(product instanceof OriginalDonut) {
+                        donut = new OriginalDonut();
+                        System.out.println("new original donut");
+                    } else if(product instanceof  FilledDonut) {
+                        donut = new FilledDonut();
+                        System.out.println("new filled donut");
+                    }
+                }
                 window.setScene(finalButtonScene);
             });
 
@@ -85,13 +105,10 @@ public class ChooseTypeScene {
 
             choicesHBox.getChildren().add(choiceVBox);
         }
-
+        System.out.println("Price of Donut: " + donut.getPrice());
         return choicesHBox;
     }
 
-    private void incrementCost(Double variable, Double increment) {
-        variable += increment;
-        System.out.println("increment cost in choosetypescene" + variable);
-    }
+
 
 }

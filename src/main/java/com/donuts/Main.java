@@ -19,19 +19,16 @@ import java.io.FileNotFoundException;
 
 public class Main extends Application {
     Stage window;
+    Donut myDonut = new OriginalDonut();
 
-    double totalCost = 0;
     final int WINDOW_WIDTH = 600;
     final int WINDOW_HEIGHT = 300;
     Scene welcomeScene, donutTypeScene, glazeTypeScene, fillingTypeScene, chooseToppingsScene, finalScene;
 
     Donut[] DONUT_ARRAY = new Donut[] {new OriginalDonut(), new FilledDonut()};
     Filling[] FILLING_ARRAY = new Filling[] {new BostonCreamFilling(), new ChocolateCreamFilling(), new StrawberryJamFilling()};
-    Scene[] CORRESPONDING_FILLING_SCENE = new Scene[] {glazeTypeScene};
     Topping[] GLAZE_ARRAY = new Topping[] {new ChocolateGlaze(), new ClearGlaze(), new MapleGlaze()};
-    Scene[] CORRESPONDING_GLAZE_SCENE = new Scene[] {chooseToppingsScene};
     Topping[] TOPPING_ARRAY = new Topping[] {new Bacon(), new RainbowSprinkles(), new ToastedCoconut()};
-    Scene[] CORRESPONDING_TOPPING_SCENE = new Scene[] {finalScene};
 
     //main method
     public static void main(String[] args) {
@@ -44,15 +41,26 @@ public class Main extends Application {
         window = primaryStage;
         window.setTitle("Sunshine Donuteria");
 
-        //filling scene
-        VBox fillingVBox = new VBox();
-        fillingVBox.setSpacing(20);
-        fillingVBox.setAlignment(Pos.CENTER);
+        //final scene
+        VBox finalVBox = new VBox();
+        Label totalLabel = new Label("Total cost: " + myDonut.getPrice());
+        totalLabel.setStyle("-fx-font-size: 20");
+        finalVBox.getChildren().add(totalLabel);
+        finalScene = new Scene(finalVBox, WINDOW_WIDTH, WINDOW_HEIGHT);
 
-        Label fillingHeader = new Label("Choose your filling:");
-        fillingHeader.setStyle("-fx-font-size: 30");
-        fillingTypeScene = new Scene(fillingHeader, WINDOW_WIDTH, WINDOW_HEIGHT);
-        fillingTypeScene = new ChooseTypeScene().chooseTypeScene(window, totalCost, FILLING_ARRAY, CORRESPONDING_FILLING_SCENE);
+        Scene[] CORRESPONDING_TOPPING_SCENE = new Scene[] {finalScene};
+
+        //topping scene
+        chooseToppingsScene = new ChooseTypeScene(myDonut).chooseTypeScene(window, TOPPING_ARRAY, CORRESPONDING_TOPPING_SCENE);
+        Scene[] CORRESPONDING_GLAZE_SCENE = new Scene[] {chooseToppingsScene};
+
+        //glaze scene
+        glazeTypeScene = new ChooseTypeScene(myDonut).chooseTypeScene(window, GLAZE_ARRAY, CORRESPONDING_GLAZE_SCENE);
+        Scene[] CORRESPONDING_FILLING_SCENE = new Scene[] {glazeTypeScene};
+
+        //filling scene
+        myDonut = new FilledDonut();
+        fillingTypeScene = new ChooseTypeScene(myDonut).chooseTypeScene(window, FILLING_ARRAY, CORRESPONDING_FILLING_SCENE);
         Scene[] CORRESPONDING_DONUT_SCENE = new Scene[] {glazeTypeScene, fillingTypeScene};
 
         //welcome scene
@@ -62,7 +70,8 @@ public class Main extends Application {
 
         Button startBtn = new Button("Start");
         startBtn.setPrefSize(100, 30);
-        donutTypeScene = new ChooseTypeScene().chooseTypeScene(window, totalCost, DONUT_ARRAY, CORRESPONDING_DONUT_SCENE);
+        ChooseTypeScene donutChooseTypeScne = new ChooseTypeScene(myDonut);
+        donutTypeScene = donutChooseTypeScne.chooseTypeScene(window, DONUT_ARRAY, CORRESPONDING_DONUT_SCENE);
         startBtn.setOnAction(e -> window.setScene(donutTypeScene));
 
         Label welcomeLabel = new Label("Welcome to Sunshine Donuteria!");
