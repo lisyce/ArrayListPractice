@@ -28,7 +28,7 @@ public class ChooseTypeScene {
         chooseTypeVBox.getChildren().add(typeHBox);
 
 
-        return new Scene(chooseTypeVBox, window.getWidth(), window.getHeight(), Color.WHITE);
+        return new Scene(chooseTypeVBox, 600, 300, Color.WHITE);
     }
 
     private HBox GenericHBoxPickerFromArrayList(Stage window, Double costVariable, Product[] productList, Scene[] correspondingScenes) {
@@ -41,7 +41,6 @@ public class ChooseTypeScene {
 
             //add the image
             Image productImage = null;
-            //TODO remove this try/catch once all products have an image associated if that works lol
             try {
                 productImage = new Image(new FileInputStream(((Product) product).getImageSrc()));
                 System.out.println(((Product) product).getImageSrc());
@@ -66,7 +65,6 @@ public class ChooseTypeScene {
             selectButton.setPrefSize(75, 30);
 
             Scene buttonScene = correspondingScenes[0];
-
             try {
                 buttonScene = correspondingScenes[i];
             } catch (ArrayIndexOutOfBoundsException e) {
@@ -76,6 +74,7 @@ public class ChooseTypeScene {
             Scene finalButtonScene = buttonScene;
             selectButton.setOnAction(e -> {
                 incrementCost(costVariable, ((Product) product).getPrice());
+                System.out.println("changing scenes");
                 System.out.println("Scene: " + finalButtonScene);
                 window.setScene(finalButtonScene);
             });
@@ -92,6 +91,7 @@ public class ChooseTypeScene {
 
     private void incrementCost(Double variable, Double increment) {
         variable += increment;
+        System.out.println("increment cost in choosetypescene" + variable);
     }
 
 }
