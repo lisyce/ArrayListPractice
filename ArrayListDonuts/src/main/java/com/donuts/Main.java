@@ -1,12 +1,7 @@
 package com.donuts;
 
-//TODO consider adding more classes so that the code is easier to read in the main method (abstraction be good)
-//TODO add image files for all classes (transparent backgrounds)
-
 import com.donuts.fillings.*;
 import com.donuts.toppings.*;
-import com.donuts.ChooseTypeScene.*;
-
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -53,7 +48,6 @@ public class Main extends Application {
         Button startBtn = new Button("Start");
         startBtn.setPrefSize(100, 30);
         startBtn.setOnAction(e -> window.setScene(new ChooseTypeScene().chooseTypeScene(window, totalCost, DONUT_ARRAY, CORRESPONDING_DONUT_SCENE)));
-        //startBtn.setOnAction(e -> window.setScene(chooseTypeScene(DONUT_ARRAY, CORRESPONDING_DONUT_SCENE)));
 
         Label welcomeLabel = new Label("Welcome to Sunshine Donuteria!");
         welcomeLabel.setStyle("-fx-font-size: 30");
@@ -63,6 +57,9 @@ public class Main extends Application {
         welcomeScene = new Scene(mainVBox, WINDOW_WIDTH, WINDOW_HEIGHT, Color.WHITE);
         window.setScene(welcomeScene);
         window.show();
+
+        //filling scene
+        
 
     }
 
